@@ -1,0 +1,295 @@
+
+local home = ""
+local seedamount = 0
+local Seeds = 0
+
+local startpos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+home = startpos
+
+wait(3)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-75.2331619, 144.091568, 109.504074)
+wait(.3)
+game.StarterGui:SetCore("SendNotification", {
+Title = "READ!!!";
+Text = "Please buy a random seed to open the GUI (Gets The Server Serial)"; -- what the text says (ofc)
+Icon = "";  
+Duration = 10;
+})
+
+
+local remoteKey;
+
+local mt = debug.getmetatable(game);
+local nc = mt.__namecall;
+
+setreadonly(mt, false);
+
+mt.__namecall = newcclosure(function(self, ...)
+    local args = {...};
+    local method = getnamecallmethod();
+
+    if (method == "InvokeServer" and self.Name == "NetworkFunction" and args[1] == "TryBuyItemFromStore") then
+        remoteKey = args[2][1];
+        setreadonly(mt, false);
+        mt.__namecall = nc;
+        setreadonly(mt, false);
+    end;
+
+    return nc(self, unpack(args));
+end);
+
+setreadonly(mt, true);
+
+repeat wait() until remoteKey;
+
+local Players = game:GetService("Players")
+
+local function getPlayerNames()
+  local names = {}
+
+  for _, player in pairs(Players:GetPlayers()) do
+    table.insert(names, player.Name)
+  end
+
+  return names
+end
+
+local function seedserial()
+    local args = {
+        [1] = "TryBuyItemFromStore",
+        [2] = {
+            [1] = remoteKey,
+            [2] = Seeds,
+            [3] = seedamount,
+            [4] = nil --[[Color3]]
+        }
+    }
+
+    game:GetService("ReplicatedStorage").NetworkFunction:InvokeServer(unpack(args))
+end
+local serial = remoteKey
+
+local Material = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/MaterialLua/master/Module.lua"))()
+
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(startpos)
+
+
+local UI =
+    Material.Load(
+    {
+        Title = "Farmtown GUI By Arth795",
+        Style = 3,
+        SizeX = 400,
+        SizeY = 400,
+        Theme = "Light"
+    }
+)
+local Page =
+    UI.New(
+    {
+        Title = "Teleport"
+    }
+)
+Page.Button(
+    {
+        Text = "Set Home",
+        Callback = function()
+            local pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+            home = pos
+        end
+    }
+)
+Page.Dropdown(
+    {
+        Text = "Choose Location",
+        Callback = function(value)
+            if value == "Farmer-Suppy" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-44.6370544, 143.82428, 131.506302)
+            elseif value == "Coin-Store" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(54.2888756, 144.590256, 518.61969)
+            elseif value == "Auto-Emporium" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(73.1088104, 144.32431, 874.111938)
+            elseif value == "Police-Station" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(73.4044113, 144.840271, 954.404785)
+            elseif value == "Town-Hall" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-101.444473, 144.839996, 705.432861)
+            elseif value == "Grocery-Store" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-96.4507446, 144.840424, 620.647095)
+            elseif value == "Bakery" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-194.956467, 144.449158, 628.321045)
+            elseif value == "Convention-Center" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-227.411835, 144.324554, 778.493103)
+            elseif value == "Furniture-Store" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-336.090363, 144.839706, 636.231079)
+            elseif value == "Hobby-Store" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-220.351547, 144.840256, 486.30957)
+            elseif value == "Shipping-Docks" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(1377.12756, 126.58992, -142.474106)
+            elseif value == "Home" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(home)
+            elseif value == "Bee-Keeper" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-340.601563, 143.824265, 293.237244)
+            elseif value == "Chromium-Mine" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(288.826569, 259.824188, -1656.97461)
+            elseif value == "Giving-Tree" then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    CFrame.new(-463.400757, 285.006866, -766.11084)
+            end
+        end,
+        Options = {
+            "Home",
+            "Farmer-Suppy",
+            "Shipping-Docks",
+            "Giving-Tree",
+            "Bee-Keeper",
+            "Chromium-Mine",
+            "Coin-Store",
+            "Auto-Emporium",
+            "Police-Station",
+            "Town-Hall",
+            "Grocery-Store",
+            "Bakery",
+            "Convention-Center",
+            "Furniture-Store",
+            "Hobby-Store"
+        }
+    }
+)
+Page.Dropdown(
+    {
+        Text = "Choose Player",
+        Callback = function(value)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players[value].Character.HumanoidRootPart.CFrame
+        end,
+        Options = getPlayerNames()
+    }
+)
+UI.Banner({
+    Text = "DM me on discord if u find bugs! | Unnamed#0152"
+})
+---page 2
+local Page2 = UI.New({
+    Title = "Buy Tab"
+})
+Page2.Dropdown(
+    {
+        Text = "Select Seed",
+        Callback = function(value)
+            if value == "Pumpkin" then
+                Seeds = 36
+            elseif value == "Wheat" then
+                Seeds = 6000
+            elseif value == "Carrot" then
+                Seeds = 6002
+            elseif value == "Potato" then
+                Seeds = 6006
+            elseif value == "Corn" then
+                Seeds = 6010
+            elseif value == "Beet" then
+                Seeds = 6026
+            elseif value == "Red-Onion" then
+                Seeds = 6028
+            elseif value == "White-Onion" then
+                Seeds = 6027
+            elseif value == "Radish" then
+                Seeds = 6025
+            elseif value == "Turnip" then
+                Seeds = 6024
+            elseif value == "Grass" then
+                Seeds = 6012
+            end
+        end,
+        Options = {
+            "Pumpkin",
+            "Wheat",
+            "Carrot",
+            "Potato",
+            "Corn",
+            "Beet",
+            "Red-Onion",
+            "White-Onion",
+            "Radish",
+            "Turnip",
+            "Grass"
+        }
+    } --Seeds Selection
+)
+Page2.Slider(
+    {
+        Text = "Amount Of Seeds",
+        Callback = function(value)
+            seedamount = value
+        end,
+        Min = 1,
+        Max = 1000,
+        Def = 0
+    } --Set Seeds Amount
+)
+Page2.Button(
+    {
+        Text = "Buy Seeds",
+        Callback = function()
+        seedserial()
+        end
+    }-- Buy Seeds
+)
+
+----------------- page 3
+local Page3 =
+    UI.New(
+    {
+        Title = "Change Log"
+    }
+)
+Page3.Button({
+    Text = "V0.01 | Click 3 Dots For More Info",
+    Callback = function()
+       print('Y U Click')
+    end,
+    Menu = {
+        Information = function(self)
+            UI.Banner({
+                Text = "Released Script 5/16/21"            
+            })
+        end
+    }
+})
+Page3.Button({
+    Text = "V0.02 | Click 3 Dots For More Info",
+    Callback = function()
+       print('Y U Click')
+    end,
+    Menu = {
+        Information = function(self)
+            UI.Banner({
+                Text = "Script now teleports u back after buying seed 5/16/21"
+            })
+        end
+    }
+})
+Page3.Button({
+    Text = "V0.03 | Click 3 Dots For More Info",
+    Callback = function()
+       print('Y U Click')
+    end,
+    Menu = {
+        Information = function(self)
+            UI.Banner({
+                Text = "Made the gui look a bit better 5/16/21"
+            })
+        end
+    }
+})
