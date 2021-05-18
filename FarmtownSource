@@ -1,4 +1,3 @@
-
 local home = ""
 local seedamount = 0
 local Seeds = 0
@@ -9,49 +8,56 @@ home = startpos
 wait(3)
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-75.2331619, 144.091568, 109.504074)
 wait(.3)
-game.StarterGui:SetCore("SendNotification", {
-Title = "READ!!!";
-Text = "Please buy a random seed to open the GUI (Gets The Server Serial)"; -- what the text says (ofc)
-Icon = "";  
-Duration = 10;
-})
+game.StarterGui:SetCore(
+    "SendNotification",
+    {
+        Title = "READ!!!",
+        Text = "Please buy a random seed to open the GUI (Gets The Server Serial)", -- what the text says (ofc)
+        Icon = "",
+        Duration = 10
+    }
+)
 
+local remoteKey
 
-local remoteKey;
+local mt = debug.getmetatable(game)
+local nc = mt.__namecall
 
-local mt = debug.getmetatable(game);
-local nc = mt.__namecall;
+setreadonly(mt, false)
 
-setreadonly(mt, false);
+mt.__namecall =
+    newcclosure(
+    function(self, ...)
+        local args = {...}
+        local method = getnamecallmethod()
 
-mt.__namecall = newcclosure(function(self, ...)
-    local args = {...};
-    local method = getnamecallmethod();
+        if (method == "InvokeServer" and self.Name == "NetworkFunction" and args[1] == "TryBuyItemFromStore") then
+            remoteKey = args[2][1]
+            setreadonly(mt, false)
+            mt.__namecall = nc
+            setreadonly(mt, false)
+        end
 
-    if (method == "InvokeServer" and self.Name == "NetworkFunction" and args[1] == "TryBuyItemFromStore") then
-        remoteKey = args[2][1];
-        setreadonly(mt, false);
-        mt.__namecall = nc;
-        setreadonly(mt, false);
-    end;
+        return nc(self, unpack(args))
+    end
+)
 
-    return nc(self, unpack(args));
-end);
+setreadonly(mt, true)
 
-setreadonly(mt, true);
-
-repeat wait() until remoteKey;
+repeat
+    wait()
+until remoteKey
 
 local Players = game:GetService("Players")
 
 local function getPlayerNames()
-  local names = {}
+    local names = {}
 
-  for _, player in pairs(Players:GetPlayers()) do
-    table.insert(names, player.Name)
-  end
+    for _, player in pairs(Players:GetPlayers()) do
+        table.insert(names, player.Name)
+    end
 
-  return names
+    return names
 end
 
 local function seedserial()
@@ -72,7 +78,6 @@ local serial = remoteKey
 local Material = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/MaterialLua/master/Module.lua"))()
 
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(startpos)
-
 
 local UI =
     Material.Load(
@@ -172,18 +177,24 @@ Page.Dropdown(
     {
         Text = "Choose Player",
         Callback = function(value)
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players[value].Character.HumanoidRootPart.CFrame
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                game.Players[value].Character.HumanoidRootPart.CFrame
         end,
         Options = getPlayerNames()
     }
 )
-UI.Banner({
-    Text = "DM me on discord if u find bugs! | Unnamed#0152"
-})
+UI.Banner(
+    {
+        Text = "DM me on discord if u find bugs! | Unnamed#0152"
+    }
+)
 ---page 2
-local Page2 = UI.New({
-    Title = "Buy Tab"
-})
+local Page2 =
+    UI.New(
+    {
+        Title = "Buy Tab"
+    }
+)
 Page2.Dropdown(
     {
         Text = "Select Seed",
@@ -242,9 +253,10 @@ Page2.Button(
     {
         Text = "Buy Seeds",
         Callback = function()
-        seedserial()
+            seedserial()
         end
-    }-- Buy Seeds
+    }
+ -- Buy Seeds
 )
 
 ----------------- page 3
@@ -254,42 +266,54 @@ local Page3 =
         Title = "Change Log"
     }
 )
-Page3.Button({
-    Text = "V0.01 | Click 3 Dots For More Info",
-    Callback = function()
-       print('Y U Click')
-    end,
-    Menu = {
-        Information = function(self)
-            UI.Banner({
-                Text = "Released Script 5/16/21"            
-            })
-        end
+Page3.Button(
+    {
+        Text = "V0.01 | Click 3 Dots For More Info",
+        Callback = function()
+            print("Y U Click")
+        end,
+        Menu = {
+            Information = function(self)
+                UI.Banner(
+                    {
+                        Text = "Released Script 5/16/21"
+                    }
+                )
+            end
+        }
     }
-})
-Page3.Button({
-    Text = "V0.02 | Click 3 Dots For More Info",
-    Callback = function()
-       print('Y U Click')
-    end,
-    Menu = {
-        Information = function(self)
-            UI.Banner({
-                Text = "Script now teleports u back after buying seed 5/16/21"
-            })
-        end
+)
+Page3.Button(
+    {
+        Text = "V0.02 | Click 3 Dots For More Info",
+        Callback = function()
+            print("Y U Click")
+        end,
+        Menu = {
+            Information = function(self)
+                UI.Banner(
+                    {
+                        Text = "Script now teleports u back after buying seed 5/16/21"
+                    }
+                )
+            end
+        }
     }
-})
-Page3.Button({
-    Text = "V0.03 | Click 3 Dots For More Info",
-    Callback = function()
-       print('Y U Click')
-    end,
-    Menu = {
-        Information = function(self)
-            UI.Banner({
-                Text = "Made the gui look a bit better 5/16/21"
-            })
-        end
+)
+Page3.Button(
+    {
+        Text = "V0.03 | Click 3 Dots For More Info",
+        Callback = function()
+            print("Y U Click")
+        end,
+        Menu = {
+            Information = function(self)
+                UI.Banner(
+                    {
+                        Text = "Made the gui look a bit better 5/16/21"
+                    }
+                )
+            end
+        }
     }
-})
+)
